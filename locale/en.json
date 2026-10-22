@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session Delete",
+    "description": "Delete sessions from the sidebar row menu: removes the log, projection cache and workspace accounting through a local recycle bin, restorable, and cleans up workspace session snapshots."
+  }
+}

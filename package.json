@@ -1,0 +1,51 @@
+{
+  "name": "@local/dsh-session-delete",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "dsh": ">=0.2.1-rc.2 <0.3.0"
+  },
+  "description": "Delete sessions for DeepSeek Harness: a sidebar row action with confirmation, real removal of the session log, projection cache and workspace accounting, plus a local recycle bin and cleanup of dsh-workspace-session snapshots.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/*.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "CONTRACT.md",
+    "docs/DESIGN.md",
+    "test/*.js"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "for f in index.js client.js lib/*.js; do node --check \"$f\" || exit 1; done"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "session-management"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  },
+  "license": "MIT"
+}
