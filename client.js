@@ -54,28 +54,12 @@ window.__ModuleLoader__.load({
       'toast.trashed': '会话已移入回收站',
       'toast.failed': '删除失败：{message}',
       'page.title': '会话删除',
-      'page.intro': '管理本机所有会话：删除、批量清理，以及从回收站恢复。删除会同时清理会话日志、投影缓存、分组登记与工作区会话快照。',
+      'page.intro': '管理删除行为与回收站。删除单个会话请用侧栏会话行的 ⋯ 菜单；删除会同时清理会话日志、投影缓存、分组登记与工作区会话快照。',
       'page.refresh': '刷新',
       'page.loading': '加载中…',
       'page.failed': '请求失败：{message}',
-      'tabs.sessions': '会话',
       'tabs.trash': '回收站',
       'tabs.settings': '设置',
-      'sessions.search': '搜索标题或会话 ID',
-      'sessions.empty': '没有匹配的会话。',
-      'sessions.count': '共 {n} 个会话',
-      'sessions.selected': '已选 {n} 个',
-      'sessions.deleteSelected': '删除选中',
-      'sessions.deleteOne': '删除',
-      'sessions.restoreOne': '恢复',
-      'sessions.purgeOne': '彻底删除',
-      'sessions.archived': '已归档',
-      'sessions.active': '运行中',
-      'sessions.ungrouped': '未分组',
-      'sessions.noWorkspace': '未分组',
-      'sessions.batchConfirm': '删除选中的 {n} 个会话？',
-      'sessions.batchWorking': '正在删除 {done}/{total}…',
-      'sessions.batchDone': '已删除 {n} 个会话',
       'trash.empty': '回收站是空的。',
       'trash.count': '回收站 {n} 项，共 {size}',
       'trash.restore': '恢复',
@@ -86,6 +70,15 @@ window.__ModuleLoader__.load({
       'trash.restored': '已恢复会话',
       'trash.purged': '已彻底删除',
       'trash.emptied': '回收站已清空',
+      'settings.group.behavior': '删除行为',
+      'settings.group.trash': '回收站',
+      'settings.group.advanced': '高级',
+      'settings.trashEnabledDesc': '删除时先把会话移入本机回收站，可随时恢复。',
+      'settings.snapshotCleanupDesc': '同时删除工作区里的会话快照，避免 dsh-workspace-session 把它重新导入。',
+      'settings.projCacheCleanupDesc': '同时删除投影缓存，防止写回型缓存重新生成数据。',
+      'settings.keepDaysDesc': '回收站里的会话保留多少天；0 表示永久保留，手动清空。',
+      'settings.sessionsRootDesc': '留空自动探测（通常是 ~/.dsh/sessions）；自定义部署时填写 JSONL 后端使用的目录。',
+      'settings.days': '天',
       'settings.trashEnabled': '默认移入回收站',
       'settings.snapshotCleanup': '同时清理工作区会话快照（防止重新导入）',
       'settings.projCacheCleanup': '同时清理投影缓存',
@@ -121,28 +114,12 @@ window.__ModuleLoader__.load({
       'toast.trashed': 'Session moved to the recycle bin',
       'toast.failed': 'Delete failed: {message}',
       'page.title': 'Session Delete',
-      'page.intro': 'Manage every session on this machine: delete, clean up in bulk, and restore from the recycle bin. Deleting also removes the log, projection cache, workspace accounting and the workspace session snapshot.',
+      'page.intro': 'Manage deletion behaviour and the recycle bin. Delete individual sessions from the sidebar row menu; deleting also removes the log, projection cache, workspace accounting and the workspace session snapshot.',
       'page.refresh': 'Refresh',
       'page.loading': 'Loading…',
       'page.failed': 'Request failed: {message}',
-      'tabs.sessions': 'Sessions',
       'tabs.trash': 'Recycle bin',
       'tabs.settings': 'Settings',
-      'sessions.search': 'Search title or session id',
-      'sessions.empty': 'No matching sessions.',
-      'sessions.count': '{n} session(s)',
-      'sessions.selected': '{n} selected',
-      'sessions.deleteSelected': 'Delete selected',
-      'sessions.deleteOne': 'Delete',
-      'sessions.restoreOne': 'Restore',
-      'sessions.purgeOne': 'Purge',
-      'sessions.archived': 'archived',
-      'sessions.active': 'resident',
-      'sessions.ungrouped': 'Ungrouped',
-      'sessions.noWorkspace': 'Ungrouped',
-      'sessions.batchConfirm': 'Delete {n} selected session(s)?',
-      'sessions.batchWorking': 'Deleting {done}/{total}…',
-      'sessions.batchDone': 'Deleted {n} session(s)',
       'trash.empty': 'The recycle bin is empty.',
       'trash.count': '{n} item(s), {size} total',
       'trash.restore': 'Restore',
@@ -153,6 +130,15 @@ window.__ModuleLoader__.load({
       'trash.restored': 'Session restored',
       'trash.purged': 'Purged',
       'trash.emptied': 'Recycle bin emptied',
+      'settings.group.behavior': 'Deletion',
+      'settings.group.trash': 'Recycle bin',
+      'settings.group.advanced': 'Advanced',
+      'settings.trashEnabledDesc': 'Move deleted sessions into the local recycle bin first, so they can be restored.',
+      'settings.snapshotCleanupDesc': 'Also remove workspace snapshots so dsh-workspace-session cannot re-import the session.',
+      'settings.projCacheCleanupDesc': 'Also remove the projection cache so a write-behind cache cannot recreate the data.',
+      'settings.keepDaysDesc': 'Days to keep recycle-bin items; 0 keeps them until you empty the bin.',
+      'settings.sessionsRootDesc': 'Empty auto-detects (usually ~/.dsh/sessions); set it for custom JSONL deployments.',
+      'settings.days': 'days',
       'settings.trashEnabled': 'Move to recycle bin by default',
       'settings.snapshotCleanup': 'Also remove workspace session snapshots (prevents re-import)',
       'settings.projCacheCleanup': 'Also remove the projection cache',
@@ -321,7 +307,10 @@ window.__ModuleLoader__.load({
 .dsh-sd-tab{border:0;border-radius:8px;padding:5px 12px;background:transparent;color:inherit;font:inherit;font-size:13px;cursor:pointer}
 .dsh-sd-tab[data-active="true"]{background:color-mix(in srgb,CanvasText 10%,transparent);font-weight:600}
 .dsh-sd-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.dsh-sd-input{flex:1 1 220px;min-width:160px;border:1px solid color-mix(in srgb,CanvasText 22%,transparent);border-radius:8px;padding:6px 10px;background:transparent;color:inherit;font:inherit;font-size:13px}
+.dsh-sd-input{border:1px solid color-mix(in srgb,CanvasText 22%,transparent);border-radius:8px;padding:6px 10px;background:transparent;color:inherit;font:inherit;font-size:13px;outline:none;box-sizing:border-box;transition:border-color .15s ease}
+.dsh-sd-input:focus{border-color:color-mix(in srgb,CanvasText 45%,transparent)}
+.dsh-sd-input.num{width:96px;text-align:center}
+.dsh-sd-input.path{width:320px;max-width:100%}
 .dsh-sd-table{width:100%;border-collapse:collapse;font-size:12.5px}
 .dsh-sd-table th,.dsh-sd-table td{text-align:left;padding:6px 8px;border-bottom:1px solid color-mix(in srgb,CanvasText 9%,transparent);vertical-align:top}
 .dsh-sd-table th{font-weight:600;opacity:.65;white-space:nowrap}
@@ -333,9 +322,27 @@ window.__ModuleLoader__.load({
 .dsh-sd-link.neutral{color:inherit;opacity:.75}
 .dsh-sd-notice{padding:8px 10px;border-radius:8px;font-size:12.5px;background:color-mix(in srgb,CanvasText 8%,transparent)}
 .dsh-sd-trash-total{font-size:12.5px;opacity:.7}
-.dsh-sd-settings{display:flex;flex-direction:column;gap:12px;max-width:560px}
-.dsh-sd-checkbox{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;line-height:18px}
-.dsh-sd-progress{font-size:12.5px;opacity:.75}
+.dsh-sd-section{display:flex;flex-direction:column;gap:10px}
+.dsh-sd-settings{display:flex;flex-direction:column;gap:14px;max-width:700px}
+.dsh-sd-group{border:1px solid color-mix(in srgb,CanvasText 12%,transparent);border-radius:12px;padding:2px 16px 4px;background:color-mix(in srgb,CanvasText 3%,transparent)}
+.dsh-sd-group-title{margin:9px 0 2px;font-size:12px;font-weight:600;letter-spacing:.02em;opacity:.55}
+.dsh-sd-setting{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px 0;border-bottom:1px solid color-mix(in srgb,CanvasText 8%,transparent)}
+.dsh-sd-setting:last-child{border-bottom:0}
+.dsh-sd-setting-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.dsh-sd-setting-title{font-size:13px;line-height:19px}
+.dsh-sd-setting-desc{font-size:12px;line-height:17px;opacity:.58;max-width:430px}
+.dsh-sd-setting-control{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.dsh-sd-switch{position:relative;display:inline-flex;width:36px;height:20px;flex:0 0 auto;cursor:pointer}
+.dsh-sd-switch input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.dsh-sd-switch span{position:absolute;inset:0;border-radius:999px;background:color-mix(in srgb,CanvasText 18%,transparent);transition:background .15s ease}
+.dsh-sd-switch span::before{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:Canvas;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s ease}
+.dsh-sd-switch input:checked + span{background:#3b82f6}
+.dsh-sd-switch input:checked + span::before{transform:translateX(16px)}
+.dsh-sd-switch input:focus-visible + span{outline:2px solid color-mix(in srgb,#3b82f6 45%,transparent);outline-offset:2px}
+.dsh-sd-inline{display:flex;align-items:center;gap:8px}
+.dsh-sd-unit{font-size:12.5px;opacity:.6}
+.dsh-sd-path{font-size:11.5px;opacity:.55;word-break:break-all}
+.dsh-sd-settings-footer{display:flex;justify-content:flex-end;padding-top:2px}
 `
 
     /** Install the stylesheet once. */
@@ -553,48 +560,28 @@ window.__ModuleLoader__.load({
      * @param {any} props - settings-section props + runtime seat.
      */
     function SessionDeleteSettings({ ctx }) {
-      const [tab, setTab] = useState('sessions')
+      const [tab, setTab] = useState('trash')
       const [phase, setPhase] = useState('loading')
-      const [sessions, setSessions] = useState([])
       const [trash, setTrash] = useState([])
       const [config, setConfig] = useState(null)
       const [counts, setCounts] = useState(null)
       const [error, setError] = useState(null)
       const [notice, setNotice] = useState(null)
-      const [search, setSearch] = useState('')
-      const [selected, setSelected] = useState(() => new Set())
-      const [working, setWorking] = useState(null)
       const [dragConfig, setDragConfig] = useState(null)
+      const [busyItem, setBusyItem] = useState(null)
 
       const load = useCallback(async (force = false) => {
         setPhase('loading')
         setError(null)
         try {
-          // One combined read: the overview carries sessions, recycle bin,
-          // config and counts, so opening the page never runs the expensive
-          // fold twice.
+          // One combined read of the recycle bin and the configuration; the
+          // settings page never lists sessions, so this stays cheap.
           const data = await api('/list' + (force === true ? '?refresh=1' : ''))
-          const rows = Array.isArray(data?.sessions) ? data.sessions : []
-          setSessions(rows)
           setTrash(Array.isArray(data?.trash) ? data.trash : [])
           setConfig(data?.config ?? null)
           setDragConfig(data?.config ?? null)
           setCounts(data?.counts ?? null)
-          setSelected(new Set())
           setPhase('ready')
-          // Titles require reading every session log on the Host. Fetch them
-          // after the list is on screen and merge them in place.
-          const missing = rows.filter(row => !row.title).map(row => row.sessionId)
-          if (data?.titlesPending === true && missing.length > 0) {
-            api('/titles', { method: 'POST', body: JSON.stringify({ ids: missing }) })
-              .then(value => {
-                const titles = value?.titles ?? {}
-                if (Object.keys(titles).length === 0) return
-                setSessions(previous => previous.map(row =>
-                  titles[row.sessionId] ? { ...row, title: titles[row.sessionId] } : row))
-              })
-              .catch(() => {})
-          }
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
           setPhase('failed')
@@ -603,86 +590,10 @@ window.__ModuleLoader__.load({
 
       useEffect(() => { void load() }, [load])
 
-      const filtered = useMemo(() => {
-        const needle = search.trim().toLowerCase()
-        if (needle === '') return sessions
-        return sessions.filter(row =>
-          String(row.title ?? '').toLowerCase().includes(needle)
-          || String(row.sessionId ?? '').toLowerCase().includes(needle)
-          || String(row.workspaceTitle ?? '').toLowerCase().includes(needle))
-      }, [sessions, search])
-
-      const groups = useMemo(() => {
-        const map = new Map()
-        for (const row of filtered) {
-          const key = row.workspaceTitle || row.workspacePath || t('sessions.ungrouped')
-          if (!map.has(key)) map.set(key, [])
-          map.get(key).push(row)
-        }
-        return [...map.entries()]
-      }, [filtered])
-
-      const toggle = id => setSelected(previous => {
-        const next = new Set(previous)
-        if (next.has(id)) next.delete(id)
-        else next.add(id)
-        return next
-      })
-
-      const deleteOne = async (row, event) => {
-        if (event?.stopPropagation) event.stopPropagation()
-        if (working !== null) return
-        setNotice(null)
-        setError(null)
-        setWorking({ kind: 'one', sessionId: row.sessionId, label: row.title || row.sessionId })
-        try {
-          await api('/delete', {
-            method: 'POST',
-            body: JSON.stringify({ sessionId: row.sessionId, trash: config?.trashEnabled !== false }),
-          })
-          clearMainIfOpen(ctx, row.sessionId)
-          refreshSessions(ctx)
-          setNotice(t('toast.deleted'))
-          await load()
-        } catch (reason) {
-          setError(reason instanceof Error ? reason.message : String(reason))
-        } finally {
-          setWorking(null)
-        }
-      }
-
-      const deleteSelected = async () => {
-        const ids = [...selected]
-        if (ids.length === 0 || working !== null) return
-        if (typeof window !== 'undefined' && typeof window.confirm === 'function'
-          && !window.confirm(t('sessions.batchConfirm', { n: ids.length }))) return
-        setNotice(null)
-        setError(null)
-        let done = 0
-        let failed = 0
-        for (const sessionId of ids) {
-          setWorking({ kind: 'batch', done, total: ids.length })
-          try {
-            await api('/delete', {
-              method: 'POST',
-              body: JSON.stringify({ sessionId, trash: config?.trashEnabled !== false }),
-            })
-            done += 1
-            clearMainIfOpen(ctx, sessionId)
-          } catch {
-            failed += 1
-          }
-        }
-        setWorking(null)
-        refreshSessions(ctx)
-        setNotice(failed === 0
-          ? t('sessions.batchDone', { n: done })
-          : t('page.failed', { message: `${done}/${ids.length}` }))
-        await load()
-      }
-
       const restoreItem = async item => {
+        if (busyItem !== null) return
         setError(null)
+        setBusyItem(item.trashId)
         try {
           await api('/restore', { method: 'POST', body: JSON.stringify({ trashId: item.trashId }) })
           setNotice(t('trash.restored'))
@@ -690,30 +601,40 @@ window.__ModuleLoader__.load({
           await load()
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
+        } finally {
+          setBusyItem(null)
         }
       }
 
       const purgeItem = async item => {
+        if (busyItem !== null) return
         setError(null)
+        setBusyItem(item.trashId)
         try {
           await api('/purge', { method: 'POST', body: JSON.stringify({ trashId: item.trashId }) })
           setNotice(t('trash.purged'))
           await load()
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
+        } finally {
+          setBusyItem(null)
         }
       }
 
       const emptyTrash = async () => {
+        if (busyItem !== null) return
         if (typeof window !== 'undefined' && typeof window.confirm === 'function'
           && !window.confirm(t('trash.emptyConfirm'))) return
         setError(null)
+        setBusyItem('*')
         try {
           await api('/empty-trash', { method: 'POST', body: JSON.stringify({}) })
           setNotice(t('trash.emptied'))
           await load()
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
+        } finally {
+          setBusyItem(null)
         }
       }
 
@@ -729,6 +650,7 @@ window.__ModuleLoader__.load({
           }
           const value = await api('/config', { method: 'POST', body: JSON.stringify({ patch }) })
           setConfig(value?.config ?? patch)
+          setDragConfig(value?.config ?? patch)
           setNotice(t('settings.saved'))
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
@@ -741,7 +663,7 @@ window.__ModuleLoader__.load({
       )
 
       const tabs = h('div', { className: 'dsh-sd-tabs', role: 'tablist' },
-        ['sessions', 'trash', 'settings'].map(name => h('button', {
+        ['trash', 'settings'].map(name => h('button', {
           key: name,
           type: 'button',
           role: 'tab',
@@ -751,22 +673,10 @@ window.__ModuleLoader__.load({
           onClick: () => setTab(name),
         }, t(`tabs.${name}`))))
 
-      const body = tab === 'sessions'
-        ? renderSessions({
-          groups, selected, toggle, deleteOne, deleteSelected, working, search, setSearch,
-          total: filtered.length, config, load,
-        })
-        : tab === 'trash'
-          ? renderTrash({ trash, trashTotal, restoreItem, purgeItem, emptyTrash })
-          : renderSettings({ dragConfig, setDragConfig, saveConfig })
-
       return h('div', { className: 'dsh-sd-page' },
         h('div', { className: 'dsh-sd-toolbar' },
           h('h2', null, t('page.title')),
           h('span', { style: { flex: '1 1 auto' } }),
-          working !== null && working.kind === 'batch'
-            ? h('span', { className: 'dsh-sd-progress' }, t('sessions.batchWorking', working))
-            : null,
           h('button', { type: 'button', className: 'dsh-sd-btn', onClick: () => { void load(true) } }, t('page.refresh'))),
         h('p', { className: 'dsh-sd-note', style: { margin: 0 } }, t('page.intro')),
         phase === 'loading' ? h('p', { className: 'dsh-sd-muted' }, t('page.loading')) : null,
@@ -774,73 +684,25 @@ window.__ModuleLoader__.load({
         error !== null && phase !== 'failed' ? h('div', { className: 'dsh-sd-error', role: 'alert' }, error) : null,
         notice !== null ? h('div', { className: 'dsh-sd-notice', role: 'status' }, notice) : null,
         tabs,
-        body)
+        tab === 'trash'
+          ? renderTrash({ trash, trashTotal, restoreItem, purgeItem, emptyTrash, busyItem })
+          : renderSettings({ dragConfig, setDragConfig, saveConfig }))
     }
 
-    /** Sessions tab. */
-    function renderSessions({ groups, selected, toggle, deleteOne, deleteSelected, working, search, setSearch, total, config, load }) {
-      return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-        h('div', { className: 'dsh-sd-toolbar' },
-          h('input', {
-            className: 'dsh-sd-input',
-            type: 'search',
-            placeholder: t('sessions.search'),
-            value: search,
-            onChange: event => setSearch(event.target.value),
-          }),
-          h('span', { className: 'dsh-sd-muted' }, t('sessions.count', { n: total })),
-          h('span', { className: 'dsh-sd-muted' }, t('sessions.selected', { n: selected.size })),
-          h('button', {
-            type: 'button',
-            className: 'dsh-sd-btn danger',
-            disabled: selected.size === 0 || working !== null,
-            onClick: () => { void deleteSelected() },
-          }, t('sessions.deleteSelected'))),
-        groups.length === 0
-          ? h('p', { className: 'dsh-sd-muted' }, t('sessions.empty'))
-          : groups.map(([group, rows]) => h('div', { key: group, style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-            h('div', { style: { fontSize: '13px', fontWeight: 600, marginTop: '6px' } }, `${group} (${rows.length})`),
-            h('table', { className: 'dsh-sd-table' },
-              h('thead', null,
-                h('tr', null,
-                  h('th', { style: { width: '28px' } }, ''),
-                  h('th', null, 'Session'),
-                  h('th', null, t('confirm.size')),
-                  h('th', null, ''),
-                  h('th', { style: { textAlign: 'right' } }, ''))),
-              h('tbody', null, rows.map(row => h('tr', { key: row.sessionId },
-                h('td', null, h('input', {
-                  type: 'checkbox',
-                  checked: selected.has(row.sessionId),
-                  onChange: () => toggle(row.sessionId),
-                })),
-                h('td', null,
-                  h('div', { title: row.title || row.sessionId },
-                    row.title || h('span', { className: 'dsh-sd-muted' }, row.sessionId)),
-                  h('div', { className: 'dsh-sd-mono' }, row.sessionId),
-                  row.archived ? h('span', { className: 'dsh-sd-badge' }, t('sessions.archived')) : null,
-                  row.active ? h('span', { className: 'dsh-sd-badge' }, t('sessions.active')) : null),
-                h('td', { style: { whiteSpace: 'nowrap' } }, formatBytes(row.sizeBytes)),
-                h('td', { className: 'dsh-sd-muted', style: { whiteSpace: 'nowrap' } }, formatTime(row.createdAt)),
-                h('td', null, h('div', { className: 'dsh-sd-row-actions' },
-                  h('button', {
-                    type: 'button',
-                    className: 'dsh-sd-link',
-                    disabled: working !== null,
-                    onClick: event => { void deleteOne(row, event) },
-                  }, t('sessions.deleteOne')))))))))))
-    }
-
-    /** Recycle-bin tab. */
-    function renderTrash({ trash, trashTotal, restoreItem, purgeItem, emptyTrash }) {
-      return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+    /**
+     * Recycle-bin tab: the parked sessions with restore/purge per row and one
+     * empty action.
+     */
+    function renderTrash({ trash, trashTotal, restoreItem, purgeItem, emptyTrash, busyItem }) {
+      const busy = busyItem !== null
+      return h('div', { className: 'dsh-sd-section' },
         h('div', { className: 'dsh-sd-toolbar' },
           h('span', { className: 'dsh-sd-trash-total' }, t('trash.count', { n: trash.length, size: formatBytes(trashTotal) })),
           h('span', { style: { flex: '1 1 auto' } }),
           h('button', {
             type: 'button',
             className: 'dsh-sd-btn',
-            disabled: trash.length === 0,
+            disabled: trash.length === 0 || busy,
             onClick: () => { void emptyTrash() },
           }, t('trash.emptyAction'))),
         trash.length === 0
@@ -854,60 +716,78 @@ window.__ModuleLoader__.load({
             h('tbody', null, trash.map(item => h('tr', { key: item.trashId },
               h('td', null,
                 h('div', { className: 'dsh-sd-mono' }, item.sessionId ?? item.trashId),
-                item.cwd ? h('div', { className: 'dsh-sd-muted' }, item.cwd) : null),
+                item.cwd ? h('div', { className: 'dsh-sd-path' }, item.cwd) : null),
               h('td', { style: { whiteSpace: 'nowrap' } }, item.deletedAt ? formatTime(item.deletedAt) : '—'),
               h('td', { style: { whiteSpace: 'nowrap' } }, formatBytes(item.sizeBytes)),
               h('td', null, h('div', { className: 'dsh-sd-row-actions' },
-                h('button', { type: 'button', className: 'dsh-sd-link neutral', onClick: () => { void restoreItem(item) } }, t('trash.restore')),
-                h('button', { type: 'button', className: 'dsh-sd-link', onClick: () => { void purgeItem(item) } }, t('trash.purge')))))))))
+                h('button', {
+                  type: 'button',
+                  className: 'dsh-sd-link neutral',
+                  disabled: busy,
+                  onClick: () => { void restoreItem(item) },
+                }, t('trash.restore')),
+                h('button', {
+                  type: 'button',
+                  className: 'dsh-sd-link',
+                  disabled: busy,
+                  onClick: () => { void purgeItem(item) },
+                }, t('trash.purge')))))))))
     }
 
-    /** Settings tab. */
+    /**
+     * Settings tab: grouped cards, iOS-style switches and compact inputs.
+     * @param {any} props - the draft configuration, its setter and the save callback.
+     */
     function renderSettings({ dragConfig, setDragConfig, saveConfig }) {
       if (dragConfig === null) return h('p', { className: 'dsh-sd-muted' }, t('page.loading'))
       const set = (field, value) => setDragConfig({ ...dragConfig, [field]: value })
+      const row = (key, title, desc, control) => h('div', { key, className: 'dsh-sd-setting' },
+        h('div', { className: 'dsh-sd-setting-text' },
+          h('div', { className: 'dsh-sd-setting-title' }, title),
+          desc ? h('div', { className: 'dsh-sd-setting-desc' }, desc) : null),
+        h('div', { className: 'dsh-sd-setting-control' }, control))
+      const toggle = field => h('label', { className: 'dsh-sd-switch' },
+        h('input', {
+          type: 'checkbox',
+          checked: dragConfig[field] === true,
+          onChange: event => set(field, event.target.checked),
+        }),
+        h('span', { 'aria-hidden': 'true' }))
       return h('div', { className: 'dsh-sd-settings' },
-        h('label', { className: 'dsh-sd-checkbox' },
-          h('input', {
-            type: 'checkbox',
-            checked: dragConfig.trashEnabled === true,
-            onChange: event => set('trashEnabled', event.target.checked),
-          }),
-          h('span', null, t('settings.trashEnabled'))),
-        h('label', { className: 'dsh-sd-checkbox' },
-          h('input', {
-            type: 'checkbox',
-            checked: dragConfig.snapshotCleanup === true,
-            onChange: event => set('snapshotCleanup', event.target.checked),
-          }),
-          h('span', null, t('settings.snapshotCleanup'))),
-        h('label', { className: 'dsh-sd-checkbox' },
-          h('input', {
-            type: 'checkbox',
-            checked: dragConfig.projCacheCleanup === true,
-            onChange: event => set('projCacheCleanup', event.target.checked),
-          }),
-          h('span', null, t('settings.projCacheCleanup'))),
-        h('label', { className: 'dsh-sd-label', style: { flexDirection: 'column', alignItems: 'stretch' } },
-          h('span', null, t('settings.keepDays')),
-          h('input', {
-            className: 'dsh-sd-input',
-            type: 'number',
-            min: 0,
-            value: dragConfig.keepDays ?? 0,
-            onChange: event => set('keepDays', Number(event.target.value) || 0),
-          })),
-        h('label', { className: 'dsh-sd-label', style: { flexDirection: 'column', alignItems: 'stretch' } },
-          h('span', null, t('settings.sessionsRoot')),
-          h('input', {
-            className: 'dsh-sd-input',
-            type: 'text',
-            value: dragConfig.sessionsRoot ?? '',
-            placeholder: '~/.dsh/sessions',
-            onChange: event => set('sessionsRoot', event.target.value),
-          })),
-        h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
-          h('button', { type: 'button', className: 'dsh-sd-btn danger', onClick: () => { void saveConfig() } }, t('settings.save'))))
+        h('section', { className: 'dsh-sd-group' },
+          h('h3', { className: 'dsh-sd-group-title' }, t('settings.group.behavior')),
+          row('trashEnabled', t('settings.trashEnabled'), t('settings.trashEnabledDesc'), toggle('trashEnabled')),
+          row('snapshotCleanup', t('settings.snapshotCleanup'), t('settings.snapshotCleanupDesc'), toggle('snapshotCleanup')),
+          row('projCacheCleanup', t('settings.projCacheCleanup'), t('settings.projCacheCleanupDesc'), toggle('projCacheCleanup'))),
+        h('section', { className: 'dsh-sd-group' },
+          h('h3', { className: 'dsh-sd-group-title' }, t('settings.group.trash')),
+          row('keepDays', t('settings.keepDays'), t('settings.keepDaysDesc'),
+            h('div', { className: 'dsh-sd-inline' },
+              h('input', {
+                className: 'dsh-sd-input num',
+                type: 'number',
+                min: 0,
+                value: dragConfig.keepDays ?? 0,
+                onChange: event => set('keepDays', Number(event.target.value) || 0),
+              }),
+              h('span', { className: 'dsh-sd-unit' }, t('settings.days'))))),
+        h('section', { className: 'dsh-sd-group' },
+          h('h3', { className: 'dsh-sd-group-title' }, t('settings.group.advanced')),
+          row('sessionsRoot', t('settings.sessionsRoot'), t('settings.sessionsRootDesc'),
+            h('input', {
+              className: 'dsh-sd-input path',
+              type: 'text',
+              spellCheck: false,
+              value: dragConfig.sessionsRoot ?? '',
+              placeholder: '~/.dsh/sessions',
+              onChange: event => set('sessionsRoot', event.target.value),
+            }))),
+        h('div', { className: 'dsh-sd-settings-footer' },
+          h('button', {
+            type: 'button',
+            className: 'dsh-sd-btn danger',
+            onClick: () => { void saveConfig() },
+          }, t('settings.save'))))
     }
 
     // ---------------------------------------------------------------------

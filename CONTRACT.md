@@ -44,8 +44,8 @@
 
 | 方法 路径 | body/query | 行为 |
 |---|---|---|
-| `GET /list` | `?refresh=1` 可选 | `{ sessions, trash, config, counts, titlesPending }`；overview 缓存 2 分钟，`refresh=1` 强制重扫 |
-| `POST /titles` | `{ ids }` | `{ titles }` 折叠显示标题；列表先出、标题异步补 |
+| `GET /list` | `?refresh=1` 可选 | `{ trash, config, counts }`；只读回收站与配置，overview 缓存 2 分钟，`refresh=1` 强制重扫 |
+| `POST /titles` | `{ ids }` | `{ titles }` 折叠显示标题；保留接口，当前管理页不再使用 |
 | `GET /status` | `?sessionId=` | 单会话删除前置信息（busy/archived/pinned/大小/目录/快照目录） |
 | `POST /delete` | `{ sessionId, trash? }` | 删除会话；`trash:false` 直接擦除 |
 | `POST /restore` | `{ trashId }` | 从回收站恢复（含快照）并尝试重新挂回工作区 |

@@ -19,11 +19,9 @@ function fakeService(overrides = {}) {
     listSessions: async () => [{ sessionId: 'session-a', title: 'A', archived: false, active: false }],
     listTrash: async () => [],
     overview: async () => ({
-      sessions: [{ sessionId: 'session-a', title: 'A', archived: false, active: false }],
       trash: [],
       config: { ...DEFAULT_CONFIG, trashEnabled: true },
-      counts: { sessions: 1, archived: 0, active: 0, trash: 0, trashBytes: 0 },
-      titlesPending: false,
+      counts: { trash: 0, trashBytes: 0 },
     }),
     refreshTitles: async ids => Object.fromEntries(ids.map(id => [id, `title:${id}`])),
     invalidate: () => {},
@@ -116,14 +114,14 @@ test('list and state return the success envelope', async () => {
   assert.equal(list.status, 200)
   const listBody = await list.json()
   assert.equal(listBody.ok, true)
-  assert.equal(listBody.value.sessions.length, 1)
+  assert.deepEqual(listBody.value.trash, [])
   assert.equal(listBody.value.config.trashEnabled, true)
-  assert.equal(listBody.value.counts.sessions, 1)
+  assert.equal(listBody.value.counts.trash, 0)
 
   const state = await callRoute(routes, '/state')
   const stateBody = await state.json()
   assert.equal(stateBody.ok, true)
-  assert.equal(stateBody.value.counts.sessions, 1)
+  assert.equal(stateBody.value.counts.trash, 0)
   assert.equal(stateBody.value.config.trashEnabled, true)
 })
 
@@ -132,7 +130,7 @@ test('list forwards the refresh flag to the overview', async () => {
   const service = fakeService({
     overview: async options => {
       seen = options
-      return { sessions: [], trash: [], config: {}, counts: {}, titlesPending: false }
+      return { trash: [], config: {}, counts: {} }
     },
   })
   const routes = apiRoutes({ service, configStore: fakeConfig() })

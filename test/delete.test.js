@@ -282,7 +282,8 @@ test('overview is cached and invalidated by mutations', async () => {
   // A cache hit returns the very same object, so the expensive scan is not
   // repeated while the settings page re-opens.
   assert.equal(second, first)
-  assert.equal(first.counts.sessions, 1)
+  assert.deepEqual(first.trash, [])
+  assert.equal(first.counts.trash, 0)
   env.service.invalidate()
   const third = await env.service.overview()
   assert.notEqual(third, first)

@@ -44,15 +44,15 @@ Agent 对象没有公开卸载入口，属于已知残留：它不再出现在�
 
 会话目录与回收站同在 `$DSH_HOME` 下，`rename` 是原子的且不产生额外 IO。跨文件系统（自定义 `sessionsRoot`）自动退化为 `cp + rm`。恢复时把 `session/` 与 `snapshot/` 各放回原位，并通过 `workspaceRegistry.resolveByPath(cwd)` 尝试重新 `attachSession`。
 
-### 6. 加载性能：一次 overview + 异步标题
+### 6. 加载性能：管理页只读回收站与配置
 
 设置页早期版本有两个问题：`/list` 与 `/state` 各跑一次「全量会话列表 + 标题折叠」，而标题折叠要读并解析每个会话的完整事件日志（本机 92 个会话 / 36MB 日志时尤其明显）。
 
-现在：
+管理页改版后只保留「回收站」「设置」两个页签，不再展示会话列表：
 
-- `/list` 返回合并的 overview（sessions + trash + config + counts），列表本身不折叠标题；
+- `/list` 只返回 `{ trash, config, counts }`，不枚举会话、不折叠标题；
 - overview 缓存 2 分钟，删除/恢复/清空/改配置都会 `invalidate()`；「刷新」按钮用 `?refresh=1` 强制重扫；
-- 标题通过 `POST /titles` 在列表渲染后异步折叠（8 秒上限；已折叠的会话进内存缓存，不重复读）。
+- `POST /titles` 保留（未来若恢复会话列表可直接复用，已折叠标题有内存缓存）。
 
 ### 7. 配置与根目录
 
