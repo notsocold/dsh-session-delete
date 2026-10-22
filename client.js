@@ -342,6 +342,7 @@ window.__ModuleLoader__.load({
 .dsh-sd-inline{display:flex;align-items:center;gap:8px}
 .dsh-sd-unit{font-size:12.5px;opacity:.6}
 .dsh-sd-path{font-size:11.5px;opacity:.55;word-break:break-all}
+.dsh-sd-title{font-size:13px;line-height:19px;font-weight:500;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dsh-sd-settings-footer{display:flex;justify-content:flex-end;padding-top:2px}
 `
 
@@ -402,6 +403,7 @@ window.__ModuleLoader__.load({
           setPending({
             sessionId,
             displayTitle: displayTitle || t('confirm.untitled'),
+            rawTitle: displayTitle || '',
           })
         },
       }, TrashIcon(), h('span', null, label))
@@ -455,7 +457,7 @@ window.__ModuleLoader__.load({
         try {
           const result = await api('/delete', {
             method: 'POST',
-            body: JSON.stringify({ sessionId: request.sessionId, trash }),
+            body: JSON.stringify({ sessionId: request.sessionId, trash, title: request.rawTitle || undefined }),
           })
           clearMainIfOpen(ctx, request.sessionId)
           refreshSessions(ctx)
@@ -715,7 +717,11 @@ window.__ModuleLoader__.load({
               h('th', { style: { textAlign: 'right' } }, ''))),
             h('tbody', null, trash.map(item => h('tr', { key: item.trashId },
               h('td', null,
-                h('div', { className: 'dsh-sd-mono' }, item.sessionId ?? item.trashId),
+                h('div', {
+                  className: item.title ? 'dsh-sd-title' : 'dsh-sd-mono',
+                  title: item.title || item.sessionId || item.trashId,
+                }, item.title || item.sessionId || item.trashId),
+                item.title ? h('div', { className: 'dsh-sd-mono' }, item.sessionId ?? item.trashId) : null,
                 item.cwd ? h('div', { className: 'dsh-sd-path' }, item.cwd) : null),
               h('td', { style: { whiteSpace: 'nowrap' } }, item.deletedAt ? formatTime(item.deletedAt) : '—'),
               h('td', { style: { whiteSpace: 'nowrap' } }, formatBytes(item.sizeBytes)),

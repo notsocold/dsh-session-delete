@@ -200,10 +200,13 @@ test('delete maps a missing session to 404 and passes the trash flag', async () 
   const trashed = await callRoute(routes, '/delete', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ sessionId: 'session-a', trash: false }),
+    body: JSON.stringify({ sessionId: 'session-a', trash: false, title: 'Row title' }),
   })
   assert.equal(trashed.status, 200)
-  assert.deepEqual(seen.at(-1), ['session-a', { trash: false }])
+  const last = seen.at(-1)
+  assert.equal(last[0], 'session-a')
+  assert.equal(last[1].trash, false)
+  assert.equal(last[1].title, 'Row title')
 })
 
 test('restore, purge and empty-trash reach the service', async () => {

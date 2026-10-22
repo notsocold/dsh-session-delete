@@ -32,7 +32,7 @@
 | `$DSH_HOME/sessions/<projectKey>/<encoded-id>/` | 插件移动/删除 | 会话日志目录（JSONL 后端布局） |
 | `<workspace>/.dsh/sessions/<encoded-id>/` | 插件移动/删除 | `dsh-workspace-session` 快照镜像 |
 | `$DSH_HOME/dsh-session-delete/config.json` | 插件读写 | 本插件配置 |
-| `$DSH_HOME/dsh-session-delete/trash/<trashId>/meta.json` | 插件读写 | 回收站元数据（sessionId/cwd/projectKey/删除时间/大小/快照来源） |
+| `$DSH_HOME/dsh-session-delete/trash/<trashId>/meta.json` | 插件读写 | 回收站元数据（sessionId/标题/cwd/projectKey/删除时间/大小/快照来源） |
 | `$DSH_HOME/dsh-session-delete/trash/<trashId>/session/` | 插件移动 | 原会话目录内容 |
 | `$DSH_HOME/dsh-session-delete/trash/<trashId>/snapshot/` | 插件移动 | 原工作区快照目录内容 |
 

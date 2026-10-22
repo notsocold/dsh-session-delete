@@ -137,6 +137,37 @@ function makeEnv(box, options = {}) {
   return { service, ctx, config, registry, sessions, live, projDeleted, emitted, workspaces, archived, pinned, attached }
 }
 
+/**
+ * Build one recycle-bin item with a plain-JSONL snapshot carrying a title.
+ * @param {any} box - the sandbox paths.
+ * @returns {Promise<{ trashId: string, dir: string }>} the created item.
+ */
+async function makeTrashItem(box) {
+  const trashId = `20260101-000000-${encodeSegment(SESSION_ID)}`
+  const dir = join(box.home, 'dsh-session-delete', 'trash', trashId)
+  await mkdir(join(dir, 'snapshot'), { recursive: true })
+  await writeFile(join(dir, 'snapshot', 'session.v4.jsonl'), [
+    JSON.stringify({ type: 'session', version: 4, id: SESSION_ID, createdAt: 1, cwd: box.workspacePath }),
+    JSON.stringify({ type: 'session/title', seq: 1, time: 2, data: { title: '回收站标题' } }),
+  ].join('\n') + '\n')
+  await mkdir(join(dir, 'session'), { recursive: true })
+  await writeFile(join(dir, 'session', 'session.v4.jsonl'), '{"type":"session","version":4}\n')
+  await writeFile(join(dir, 'meta.json'), JSON.stringify({
+    version: 1,
+    trashId,
+    sessionId: SESSION_ID,
+    cwd: box.workspacePath,
+    projectKey: box.project,
+    createdAt: 1,
+    deletedAt: '2026-01-01T00:00:00.000Z',
+    sizeBytes: 10,
+    workspacePaths: [box.workspacePath],
+    hasSession: true,
+    hasSnapshot: true,
+  }))
+  return { trashId, dir }
+}
+
 /** Whether a path exists. */
 async function exists(path) {
   try {
@@ -272,6 +303,26 @@ test('empty-trash removes every parked item', async () => {
   assert.equal(result.removed, 2)
   assert.equal(await exists(join(box.home, 'dsh-session-delete', 'trash', first.trashId)), false)
   assert.equal(await exists(join(box.home, 'dsh-session-delete', 'trash', second.trashId)), false)
+})
+
+test('deleting with a title stores it in the recycle bin', async () => {
+  const box = await setup()
+  const env = makeEnv(box, {})
+  const result = await env.service.deleteSession(SESSION_ID, { trash: true, title: '我的标题' })
+  const meta = JSON.parse(await readFile(join(box.home, 'dsh-session-delete', 'trash', result.trashId, 'meta.json'), 'utf8'))
+  assert.equal(meta.title, '我的标题')
+  const items = await env.service.listTrash()
+  assert.equal(items[0].title, '我的标题')
+})
+
+test('listTrash backfills a missing title from the snapshot', async () => {
+  const box = await setup()
+  const env = makeEnv(box, {})
+  const item = await makeTrashItem(box)
+  const items = await env.service.listTrash()
+  assert.equal(items[0].title, '回收站标题')
+  const meta = JSON.parse(await readFile(join(item.dir, 'meta.json'), 'utf8'))
+  assert.equal(meta.title, '回收站标题')
 })
 
 test('overview is cached and invalidated by mutations', async () => {
