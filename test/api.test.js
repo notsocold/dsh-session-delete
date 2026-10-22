@@ -18,6 +18,15 @@ function fakeService(overrides = {}) {
   return {
     listSessions: async () => [{ sessionId: 'session-a', title: 'A', archived: false, active: false }],
     listTrash: async () => [],
+    overview: async () => ({
+      sessions: [{ sessionId: 'session-a', title: 'A', archived: false, active: false }],
+      trash: [],
+      config: { ...DEFAULT_CONFIG, trashEnabled: true },
+      counts: { sessions: 1, archived: 0, active: 0, trash: 0, trashBytes: 0 },
+      titlesPending: false,
+    }),
+    refreshTitles: async ids => Object.fromEntries(ids.map(id => [id, `title:${id}`])),
+    invalidate: () => {},
     status: async sessionId => ({ sessionId, busy: false, sizeBytes: 10, trashEnabled: true }),
     deleteSession: async (sessionId, options) => ({ sessionId, deleted: true, trashed: options.trash !== false }),
     restore: async trashId => ({ trashId, restored: true }),
@@ -87,7 +96,7 @@ test('apply registers the authenticated routes', async () => {
     if (previousHome === undefined) delete process.env.DSH_HOME
     else process.env.DSH_HOME = previousHome
   }
-  assert.equal(routes.length, 8)
+  assert.equal(routes.length, 9)
   assert.deepEqual(routes.map(route => route.path).sort(), [
     '/api/dsh-session-delete/config',
     '/api/dsh-session-delete/delete',
@@ -97,6 +106,7 @@ test('apply registers the authenticated routes', async () => {
     '/api/dsh-session-delete/restore',
     '/api/dsh-session-delete/state',
     '/api/dsh-session-delete/status',
+    '/api/dsh-session-delete/titles',
   ])
 })
 
@@ -107,12 +117,40 @@ test('list and state return the success envelope', async () => {
   const listBody = await list.json()
   assert.equal(listBody.ok, true)
   assert.equal(listBody.value.sessions.length, 1)
+  assert.equal(listBody.value.config.trashEnabled, true)
+  assert.equal(listBody.value.counts.sessions, 1)
 
   const state = await callRoute(routes, '/state')
   const stateBody = await state.json()
   assert.equal(stateBody.ok, true)
   assert.equal(stateBody.value.counts.sessions, 1)
   assert.equal(stateBody.value.config.trashEnabled, true)
+})
+
+test('list forwards the refresh flag to the overview', async () => {
+  let seen = null
+  const service = fakeService({
+    overview: async options => {
+      seen = options
+      return { sessions: [], trash: [], config: {}, counts: {}, titlesPending: false }
+    },
+  })
+  const routes = apiRoutes({ service, configStore: fakeConfig() })
+  await callRoute(routes, '/list?refresh=1')
+  assert.deepEqual(seen, { force: true })
+})
+
+test('titles returns folded titles for the requested ids', async () => {
+  const routes = apiRoutes({ service: fakeService(), configStore: fakeConfig() })
+  const response = await callRoute(routes, '/titles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ ids: ['session-a', 'session-b'] }),
+  })
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.value.titles['session-a'], 'title:session-a')
+  assert.equal(body.value.titles['session-b'], 'title:session-b')
 })
 
 test('status requires a session id', async () => {

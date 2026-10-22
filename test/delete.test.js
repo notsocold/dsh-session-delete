@@ -274,6 +274,20 @@ test('empty-trash removes every parked item', async () => {
   assert.equal(await exists(join(box.home, 'dsh-session-delete', 'trash', second.trashId)), false)
 })
 
+test('overview is cached and invalidated by mutations', async () => {
+  const box = await setup()
+  const env = makeEnv(box, {})
+  const first = await env.service.overview()
+  const second = await env.service.overview()
+  // A cache hit returns the very same object, so the expensive scan is not
+  // repeated while the settings page re-opens.
+  assert.equal(second, first)
+  assert.equal(first.counts.sessions, 1)
+  env.service.invalidate()
+  const third = await env.service.overview()
+  assert.notEqual(third, first)
+})
+
 test('status reports busy, archive and snapshot facts', async () => {
   const box = await setup()
   const env = makeEnv(box, { archived: [SESSION_ID], activity: { [SESSION_ID]: [{ kind: 'schedule', items: [] }] } })

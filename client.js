@@ -566,19 +566,35 @@ window.__ModuleLoader__.load({
       const [working, setWorking] = useState(null)
       const [dragConfig, setDragConfig] = useState(null)
 
-      const load = useCallback(async () => {
+      const load = useCallback(async (force = false) => {
         setPhase('loading')
         setError(null)
         try {
-          const list = await api('/list')
-          const state = await api('/state')
-          setSessions(Array.isArray(list?.sessions) ? list.sessions : [])
-          setTrash(Array.isArray(list?.trash) ? list.trash : [])
-          setConfig(state?.config ?? null)
-          setDragConfig(state?.config ?? null)
-          setCounts(state?.counts ?? null)
+          // One combined read: the overview carries sessions, recycle bin,
+          // config and counts, so opening the page never runs the expensive
+          // fold twice.
+          const data = await api('/list' + (force === true ? '?refresh=1' : ''))
+          const rows = Array.isArray(data?.sessions) ? data.sessions : []
+          setSessions(rows)
+          setTrash(Array.isArray(data?.trash) ? data.trash : [])
+          setConfig(data?.config ?? null)
+          setDragConfig(data?.config ?? null)
+          setCounts(data?.counts ?? null)
           setSelected(new Set())
           setPhase('ready')
+          // Titles require reading every session log on the Host. Fetch them
+          // after the list is on screen and merge them in place.
+          const missing = rows.filter(row => !row.title).map(row => row.sessionId)
+          if (data?.titlesPending === true && missing.length > 0) {
+            api('/titles', { method: 'POST', body: JSON.stringify({ ids: missing }) })
+              .then(value => {
+                const titles = value?.titles ?? {}
+                if (Object.keys(titles).length === 0) return
+                setSessions(previous => previous.map(row =>
+                  titles[row.sessionId] ? { ...row, title: titles[row.sessionId] } : row))
+              })
+              .catch(() => {})
+          }
         } catch (reason) {
           setError(reason instanceof Error ? reason.message : String(reason))
           setPhase('failed')
@@ -751,7 +767,7 @@ window.__ModuleLoader__.load({
           working !== null && working.kind === 'batch'
             ? h('span', { className: 'dsh-sd-progress' }, t('sessions.batchWorking', working))
             : null,
-          h('button', { type: 'button', className: 'dsh-sd-btn', onClick: () => { void load() } }, t('page.refresh'))),
+          h('button', { type: 'button', className: 'dsh-sd-btn', onClick: () => { void load(true) } }, t('page.refresh'))),
         h('p', { className: 'dsh-sd-note', style: { margin: 0 } }, t('page.intro')),
         phase === 'loading' ? h('p', { className: 'dsh-sd-muted' }, t('page.loading')) : null,
         phase === 'failed' ? h('div', { className: 'dsh-sd-error', role: 'alert' }, t('page.failed', { message: error ?? '' })) : null,

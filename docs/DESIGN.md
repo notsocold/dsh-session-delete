@@ -44,11 +44,21 @@ Agent 对象没有公开卸载入口，属于已知残留：它不再出现在�
 
 会话目录与回收站同在 `$DSH_HOME` 下，`rename` 是原子的且不产生额外 IO。跨文件系统（自定义 `sessionsRoot`）自动退化为 `cp + rm`。恢复时把 `session/` 与 `snapshot/` 各放回原位，并通过 `workspaceRegistry.resolveByPath(cwd)` 尝试重新 `attachSession`。
 
-### 6. 配置与根目录
+### 6. 加载性能：一次 overview + 异步标题
+
+设置页早期版本有两个问题：`/list` 与 `/state` 各跑一次「全量会话列表 + 标题折叠」，而标题折叠要读并解析每个会话的完整事件日志（本机 92 个会话 / 36MB 日志时尤其明显）。
+
+现在：
+
+- `/list` 返回合并的 overview（sessions + trash + config + counts），列表本身不折叠标题；
+- overview 缓存 2 分钟，删除/恢复/清空/改配置都会 `invalidate()`；「刷新」按钮用 `?refresh=1` 强制重扫；
+- 标题通过 `POST /titles` 在列表渲染后异步折叠（8 秒上限；已折叠的会话进内存缓存，不重复读）。
+
+### 7. 配置与根目录
 
 会话根目录解析顺序：`config.sessionsRoot` → JSONL 后端的私有 `root`（尽力探测，兼容自定义部署）→ `$DSH_HOME/sessions`（官方默认）。配置存在 `$DSH_HOME/dsh-session-delete/config.json`，设置页可改。
 
-### 7. 安全
+### 8. 安全
 
 - 全部路由走 `ctx.connection.fetch`，天然位于 `/api` 认证围栏内，非 owner peer 返回 401；
 - 路径先经 `encodeSegment`/`projectKey` 编码，再用于文件系统；
